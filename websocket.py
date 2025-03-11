@@ -1,5 +1,5 @@
-import openai
 import os
+import openai
 import json
 import asyncio
 import tiktoken
@@ -8,12 +8,14 @@ from fastapi import FastAPI, WebSocket
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain.schema import Document
 
 app = FastAPI()
 
-# OpenAI API Key 설정
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "sk-...")
+# OpenAI API Key를 환경 변수에서 가져오기
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise ValueError("❌ 환경 변수 'OPENAI_API_KEY'가 설정되지 않았습니다!")
+
 client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
 # Chroma DB 설정
@@ -72,4 +74,5 @@ async def websocket_endpoint(websocket: WebSocket):
             break
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))  # Render는 `PORT` 환경 변수를 자동 설정
+    uvicorn.run(app, host="0.0.0.0", port=port)
