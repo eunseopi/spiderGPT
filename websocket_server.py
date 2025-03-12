@@ -11,6 +11,8 @@ from langchain_huggingface import HuggingFaceEmbeddings
 
 app = FastAPI()
 
+PORT = int(os.getenv("PORT"))
+
 # OpenAI API Key를 환경 변수에서 가져오기
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
